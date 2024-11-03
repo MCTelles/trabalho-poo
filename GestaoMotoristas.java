@@ -8,6 +8,7 @@ public class GestaoMotoristas {
         motoristas = new ArrayList<>();
     }
 
+    // Método para cadastrar motorista
     public void cadastrarMotorista(String nome, String id, String CNH, String nivelExperiencia) {
         Motorista motorista = new Motorista(nome, id, CNH, nivelExperiencia);
         motoristas.add(motorista);
@@ -28,5 +29,28 @@ public class GestaoMotoristas {
                 System.out.println("----------------------------");
             }
         }
+    }
+    // Método para listar viagens dos motoristas
+    public void listarViagensMotorista(String idMotorista) {
+        for (Motorista motorista : motoristas) {
+            if (motorista.getId().equals(idMotorista)) {
+                System.out.println("Viagens de " + motorista.getNome() + ":");
+                List<Viagem> viagens = motorista.getViagens();
+                if (viagens.isEmpty()) {
+                    System.out.println("Nenhuma viagem registrada.");
+                } else {
+                    for (Viagem viagem : viagens) {
+                        System.out.println(viagem); // Chama o método toString da classe Viagem
+                    }
+                }
+                return; // Sai do método após encontrar o motorista
+            }
+        }
+        System.out.println("Motorista com ID " + idMotorista + " não encontrado.");
+    }
+
+    // Método para acessar a lista de motoristas
+    public List<Motorista> getMotoristas() {
+        return motoristas; // Retorna a lista de motoristas
     }
 }

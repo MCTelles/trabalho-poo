@@ -33,14 +33,9 @@ public class Frota {
             System.out.println(carro);
         }
     }
-    
-    public void listarVeiculosBaixaAutonomia(double limite) {
-        System.out.println("Veículos com autonomia abaixo de " + limite + " km:");
-        for (CarroEletrico carro : veiculos) {
-            if (carro.getAutonomiaAtual() < limite) {
-                System.out.println(carro);
-            }
-        }
+
+    // Método para acessar a lista de veículos
+    public List<CarroEletrico> getVeiculos() {
+        return new ArrayList<>(veiculos); // Retorna uma cópia da lista de veículos
     }
-    
 }

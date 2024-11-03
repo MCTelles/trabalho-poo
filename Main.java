@@ -1,63 +1,142 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
-      // FROTA - GESTÃO DE VEICULOS
-
+        Scanner scanner = new Scanner(System.in);
         Frota frota = new Frota();
+        GestaoMotoristas gestaoMotoristas = new GestaoMotoristas();
+        List<Eletroposto> eletropostos = new ArrayList<>();
 
-        CarroCompacto carro1 = new CarroCompacto("1", "Marca A", "A", 2021, 50);
-        CarroSedan carro2 = new CarroSedan("2", "Marca B", "B", 2020, 80);
-        CarroSUV carro3 = new CarroSUV("3", "Marca C", "C", 2022, 100);
+        // Criar eletropostos
+        eletropostos.add(new Eletroposto("E1", "Shopping Center", 5, 4.0));
+        eletropostos.add(new Eletroposto("E2", "Posto de Combustível", 3, 2.5));
 
-        frota.adicionarVeiculo(carro1);
-        frota.adicionarVeiculo(carro2);
-        frota.adicionarVeiculo(carro3);
+        boolean running = true;
 
-        frota.listarVeiculos();
+        while (running) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Adicionar Veículo");
+            System.out.println("2. Listar Veículos");
+            System.out.println("3. Adicionar Motorista");
+            System.out.println("4. Listar Motoristas");
+            System.out.println("5. Planejar e Executar Viagem");
+            System.out.println("6. Sair");
+            System.out.print("Escolha uma opção: ");
 
-        frota.removerVeiculo("1");
-        frota.listarVeiculos();
+            int opcao = scanner.nextInt();
+            scanner.nextLine(); // Limpar o buffer do scanner
 
-      
-      //GESTÃO MOTORISTAS
+            switch (opcao) {
+                case 1:
+                    // Adicionar veículo
+                    System.out.print("Digite o tipo de veículo (compacto, sedan, suv): ");
+                    String tipo = scanner.nextLine();
+                    System.out.print("Digite o ID do veículo: ");
+                    String id = scanner.nextLine();
+                    System.out.print("Digite a marca do veículo: ");
+                    String marca = scanner.nextLine();
+                    System.out.print("Digite o modelo do veículo: ");
+                    String modelo = scanner.nextLine();
+                    System.out.print("Digite o ano de fabricação: ");
+                    int ano = scanner.nextInt();
+                    System.out.print("Digite a capacidade da bateria: ");
+                    double bateria = scanner.nextDouble();
+                    scanner.nextLine(); // Limpar o buffer
 
-        GestaoMotoristas gestao = new GestaoMotoristas();
+                    switch (tipo.toLowerCase()) {
+                        case "compacto":
+                            frota.adicionarVeiculo(new CarroCompacto(id, marca, modelo, ano, bateria));
+                            break;
+                        case "sedan":
+                            frota.adicionarVeiculo(new CarroSedan(id, marca, modelo, ano, bateria));
+                            break;
+                        case "suv":
+                            frota.adicionarVeiculo(new CarroSUV(id, marca, modelo, ano, bateria));
+                            break;
+                        default:
+                            System.out.println("Tipo de veículo inválido.");
+                    }
+                    break;
 
-        gestao.cadastrarMotorista("João Silva", "12345", "AB123456", "Intermediário");
-        gestao.cadastrarMotorista("Maria Oliveira", "67890", "CD987654", "Avançado");
+                case 2:
+                    // Listar veículos
+                    frota.listarVeiculos();
+                    break;
 
-        gestao.listarMotoristas();
+                case 3:
+                    // Adicionar motorista
+                    System.out.print("Digite o nome do motorista: ");
+                    String nome = scanner.nextLine();
+                    System.out.print("Digite o ID do motorista: ");
+                    String idMotorista = scanner.nextLine();
+                    System.out.print("Digite a CNH do motorista: ");
+                    String cnh = scanner.nextLine();
+                    System.out.print("Digite o nível de experiência do motorista: ");
+                    String nivelExperiencia = scanner.nextLine();
 
+                    gestaoMotoristas.cadastrarMotorista(nome, idMotorista, cnh, nivelExperiencia);
+                    break;
 
-      // VIAGEM - veículo, motorista, distância percorrida e eletropostos utilizados.
-      // Criação de um carro elétrico
-      CarroEletrico carro = new CarroCompacto("1", "MarcaX", "ModeloY", 2023, 100.0); // Exemplo de CarroCompacto
+                case 4:
+                    // Listar motoristas
+                    gestaoMotoristas.listarMotoristas();
+                    break;
 
-      // Criação de um motorista
-      Motorista motorista = new Motorista("João Silva", "M001", "1234567890", "Intermediário");
+                case 5:
+                    // Planejar e executar viagem
+                    System.out.print("Digite o ID do motorista: ");
+                    String idMotoristaViagem = scanner.nextLine();
+                    Motorista motorista = null;
+                    for (Motorista m : gestaoMotoristas.getMotoristas()) { // Use o novo método
+                        if (m.getId().equals(idMotoristaViagem)) {
+                            motorista = m;
+                            break;
+                        }
+                    }
 
-      // Definindo a distância total da viagem
-      double distanciaTotal = 600.0; // Distância em km
+                    if (motorista == null) {
+                        System.out.println("Motorista não encontrado.");
+                        break;
+                    }
 
-      // Criando a viagem
-      Viagem viagem = new Viagem(carro, motorista, distanciaTotal);
+                    System.out.print("Digite o ID do veículo: ");
+                    String idVeiculo = scanner.nextLine();
+                    CarroEletrico veiculoViagem = null;
+                    for (CarroEletrico carro : frota.getVeiculos()) {
+                        if (carro.getId().equals(idVeiculo)) {
+                            veiculoViagem = carro;
+                            break;
+                        }
+                    }
 
-      // Criando uma lista de eletropostos disponíveis
-      List<Eletroposto> eletropostos = new ArrayList<>();
-      eletropostos.add(new Eletroposto("E1", "Eletroposto A", 5, 4.0));
-      eletropostos.add(new Eletroposto("E2", "Eletroposto B", 3, 6.0));
-      eletropostos.add(new Eletroposto("E3", "Eletroposto C", 2, 8.0));
+                    if (veiculoViagem == null) {
+                        System.out.println("Veículo não encontrado.");
+                        break;
+                    }
 
-      // Planejando paradas
-      viagem.planejarParadas(eletropostos);
+                    System.out.print("Digite a distância total da viagem (km): ");
+                    double distanciaTotal = scanner.nextDouble();
+                    scanner.nextLine(); // Limpar o buffer
 
-      // Executando a viagem
-      viagem.executarViagem();
+                    Viagem viagem = new Viagem(veiculoViagem, motorista, distanciaTotal);
+                    viagem.planejarParadas(eletropostos);
+                    viagem.executarViagem();
+                    viagem.exibirResumoViagem();
+                    break;
 
-      // Exibindo o resumo da viagem
-      viagem.exibirResumoViagem();
+                case 6:
+                    // Sair
+                    running = false;
+                    System.out.println("Saindo...");
+                    break;
+
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
+
+        scanner.close();
     }
 }
