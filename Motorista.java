@@ -75,4 +75,7 @@ class GestaoMotoristas {
             }
         }
     }
+    public List<Motorista> getMotoristas() {
+        return motoristas;
+    }
 }
